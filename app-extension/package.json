@@ -37,7 +37,7 @@
     "schedule"
   ],
   "dependencies": {
-    "@quasar/quasar-ui-qcalendar": "^3.3.5"
+    "@quasar/quasar-ui-qcalendar": "file:../ui"
   },
   "devDependencies": {
     "@vue/eslint-config-standard": "^6.0.0",

@@ -1,3 +1,5 @@
+import { h } from 'vue'
+
 // Mixins
 import QCalendarDaily from './QCalendarDaily.js'
 
@@ -36,7 +38,7 @@ export default {
   },
 
   methods: {
-    __renderHead (h) {
+    __renderHead (hh) {
       const component = h('div', {
         staticClass: 'q-calendar-daily__head',
         style: {
@@ -58,7 +60,7 @@ export default {
       return component
     },
 
-    __renderHeadDays (h) {
+    __renderHeadDays (hh) {
       if (this.days.length === 1 && this.columnCount !== undefined && parseInt(this.columnCount, 10) > 0) {
         // return [...new Array(parseInt(this.columnCount, 10))]
         return [
@@ -76,7 +78,7 @@ export default {
       }
     },
 
-    __renderPane (h) {
+    __renderPane (hh) {
       return h('div', {
         ref: 'pane',
         staticClass: 'q-calendar-daily__pane',
@@ -88,12 +90,12 @@ export default {
       ])
     },
 
-    __renderBodyIntervals (h) {
+    __renderBodyIntervals (hh) {
       return undefined
     },
 
-    __renderColumnHead (h, column, idx) {
-      const slot = this.$scopedSlots['column-header']
+    __renderColumnHead (hh, column, idx) {
+      const slot = this.$slots['column-header']()
       const scope = column
       const width = this.computedWidth
       let dragOver
@@ -129,8 +131,8 @@ export default {
       ])
     },
 
-    __renderHeadColumn (h, column) {
-      const slot = this.$scopedSlots['column-header-label']
+    __renderHeadColumn (hh, column) {
+      const slot = this.$slots['column-header-label']()
       const scope = column
 
       return h('div', {
@@ -141,13 +143,13 @@ export default {
       ])
     },
 
-    __renderHeadColumnLabel (h, label) {
+    __renderHeadColumnLabel (hh, label) {
       return h('span', {
         staticClass: 'ellipsis'
       }, label)
     },
 
-    __renderDays (h) {
+    __renderDays (hh) {
       if (this.days.length === 1 && this.columnCount && parseInt(this.columnCount, 10) > 0) {
         return [
           Array.apply(null, new Array(parseInt(this.columnCount, 10)))
@@ -164,8 +166,8 @@ export default {
       }
     },
 
-    __renderColumn (h, column, idx) {
-      const slot = this.$scopedSlots['column-body']
+    __renderColumn (hh, column, idx) {
+      const slot = this.$slots['column-body']()
       const scope = { column, index: idx }
       const width = this.computedWidth
       let dragOver
@@ -205,8 +207,8 @@ export default {
       ])
     },
 
-    __renderDay (h, day, dayIndex, idx) {
-      const slot = this.$scopedSlots['day-body']
+    __renderDay (hh, day, dayIndex, idx) {
+      const slot = this.$slots['day-body']()
       const scope = { timestamp: day }
       const width = this.computedWidth
       let dragOver
@@ -244,7 +246,7 @@ export default {
     }
   },
 
-  render (h) {
+  render () {
     return h('div', {
       class: 'q-calendar-agenda'
     }, [

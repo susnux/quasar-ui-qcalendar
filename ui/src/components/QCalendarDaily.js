@@ -1,3 +1,5 @@
+import { h } from 'vue'
+
 // Quasar
 import { QBtn } from 'quasar'
 
@@ -71,7 +73,7 @@ export default {
       return area && pane ? (area.offsetWidth - pane.offsetWidth) : 0
     },
 
-    __renderHead (h) {
+    __renderHead (hh) {
       const component = h('div', {
         staticClass: 'q-calendar-daily__head',
         style: {
@@ -96,8 +98,8 @@ export default {
       return component
     },
 
-    __renderHeadIntervals (h) {
-      const slot = this.$scopedSlots['intervals-header']
+    __renderHeadIntervals (hh) {
+      const slot = this.$slots['intervals-header']()
 
       return h('div', {
         staticClass: 'q-calendar-daily__intervals-head q-calendar-daily__intervals-head--text',
@@ -109,7 +111,7 @@ export default {
       ])
     },
 
-    __renderHeadDays (h) {
+    __renderHeadDays (hh) {
       if (this.days.length === 1 && this.columnCount !== undefined && parseInt(this.columnCount, 10) > 0) {
         // return [...new Array(parseInt(this.columnCount, 10))]
         return Array.apply(null, new Array(parseInt(this.columnCount, 10)))
@@ -121,9 +123,9 @@ export default {
       }
     },
 
-    __renderHeadDay (h, day, idx) {
-      const headDaySlot = this.$scopedSlots['head-day']
-      const dayHeaderSlot = this.$scopedSlots['day-header']
+    __renderHeadDay (hh, day, idx) {
+      const headDaySlot = this.$slots['head-day']()
+      const dayHeaderSlot = this.$slots['day-header']()
       const activeDate = this.noActiveDate !== true && this.value === day.date
       const scope = this.getScopeForSlot(day, idx)
       scope.activeDate = activeDate
@@ -168,8 +170,8 @@ export default {
       ])
     },
 
-    __renderHeadWeekday (h, day) {
-      const slot = this.$scopedSlots['day-header-label']
+    __renderHeadWeekday (hh, day) {
+      const slot = this.$slots['day-header-label']()
       const scope = this.getScopeForSlot(day)
       scope.shortWeekdayLabel = this.shortWeekdayLabel
 
@@ -180,17 +182,17 @@ export default {
       ])
     },
 
-    __renderHeadDayLabel (h, day, label) {
+    __renderHeadDayLabel (hh, day, label) {
       return h('span', {
         staticClass: 'ellipsis'
       }, this.weekdayFormatter(day, label))
     },
 
-    __renderHeadDayBtn (h, day) {
+    __renderHeadDayBtn (hh, day) {
       const activeDate = this.noActiveDate !== true && this.value === day.date
       const dayLabel = this.dayFormatter(day, false)
-      const dayLabelSlot = this.$scopedSlots['day-label']
-      const dayBtnSlot = this.$scopedSlots['day-btn']
+      const dayLabelSlot = this.$slots['day-label']()
+      const dayBtnSlot = this.$slots['day-btn']()
       const scope = { dayLabel, timestamp: day, activeDate }
 
       return dayBtnSlot
@@ -213,8 +215,8 @@ export default {
         ])
     },
 
-    __renderColumnHeaderBefore (h, day, idx) {
-      const slot = this.$scopedSlots['column-header-before']
+    __renderColumnHeaderBefore (hh, day, idx) {
+      const slot = this.$slots['column-header-before']()
       const scope = { timestamp: day }
       scope.index = idx
       return h('div', {
@@ -224,8 +226,8 @@ export default {
       ])
     },
 
-    __renderColumnHeaderAfter (h, day, idx) {
-      const slot = this.$scopedSlots['column-header-after']
+    __renderColumnHeaderAfter (hh, day, idx) {
+      const slot = this.$slots['column-header-after']()
       const scope = { timestamp: day }
       scope.index = idx
       return h('div', {
@@ -235,7 +237,7 @@ export default {
       ])
     },
 
-    __renderBody (h) {
+    __renderBody (hh) {
       return h('div', {
         staticClass: 'q-calendar-daily__body'
       }, [
@@ -243,7 +245,7 @@ export default {
       ])
     },
 
-    __renderScrollArea (h) {
+    __renderScrollArea (hh) {
       if (this.noScroll !== undefined && this.noScroll === true) {
         return this.__renderPane(h)
       }
@@ -257,7 +259,7 @@ export default {
       }
     },
 
-    __renderPane (h) {
+    __renderPane (hh) {
       return h('div', {
         ref: 'pane',
         staticClass: 'q-calendar-daily__pane',
@@ -269,8 +271,8 @@ export default {
       ])
     },
 
-    __renderDayContainer (h) {
-      const slot = this.$scopedSlots['day-container']
+    __renderDayContainer (hh) {
+      const slot = this.$slots['day-container']
 
       const component = h('div', {
         staticClass: 'q-calendar-daily__day-container'
@@ -294,7 +296,7 @@ export default {
       return component
     },
 
-    __renderDays (h) {
+    __renderDays (hh) {
       if (this.days.length === 1 && this.columnCount && parseInt(this.columnCount, 10) > 0) {
         return Array.apply(null, new Array(parseInt(this.columnCount, 10)))
           .map((_, i) => i + parseInt(this.columnIndexStart, 10))
@@ -305,8 +307,8 @@ export default {
       }
     },
 
-    __renderDay (h, day, dayIndex, idx) {
-      const slot = this.$scopedSlots['day-body']
+    __renderDay (hh, day, dayIndex, idx) {
+      const slot = this.$slots['day-body']()
       const scope = this.getScopeForSlot(day, idx)
       const width = this.computedWidth
 
@@ -329,14 +331,14 @@ export default {
       ])
     },
 
-    __renderDayIntervals (h, index, idx) {
+    __renderDayIntervals (hh, index, idx) {
       return this.intervals[index].map((interval) => this.__renderDayInterval(h, interval, idx))
     },
 
-    __renderDayInterval (h, interval, idx) {
+    __renderDayInterval (hh, interval, idx) {
       const height = convertToUnit(this.intervalHeight)
       const styler = this.intervalStyle || this.intervalStyleDefault
-      const slot = this.$scopedSlots.interval
+      const slot = this.$slots.interval()
       const scope = this.getScopeForSlot(interval, idx)
       let dragOver
 
@@ -370,7 +372,7 @@ export default {
       return h('div', data, children)
     },
 
-    __renderBodyIntervals (h) {
+    __renderBodyIntervals (hh) {
       const data = {
         staticClass: 'q-calendar-daily__intervals-body',
         on: {
@@ -384,11 +386,11 @@ export default {
       return h('div', data, this.__renderIntervalLabels(h))
     },
 
-    __renderIntervalLabels (h) {
+    __renderIntervalLabels (hh) {
       return this.intervals[0].map((interval) => this.__renderIntervalLabel(h, interval))
     },
 
-    __renderIntervalLabel (h, interval) {
+    __renderIntervalLabel (hh, interval) {
       const height = convertToUnit(this.intervalHeight)
       const short = this.shortIntervalLabel
       const shower = this.showIntervalLabel || this.showIntervalLabelDefault
@@ -409,7 +411,7 @@ export default {
     }
   },
 
-  render (h) {
+  render () {
     return h('div', {
       class: 'q-calendar-daily',
       directives: [{

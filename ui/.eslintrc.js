@@ -27,9 +27,7 @@ module.exports = {
     // Uncomment any of the lines below to choose desired strictness,
     // but leave only one uncommented!
     // See https://eslint.vuejs.org/rules/#available-rules
-    'plugin:vue/essential', // Priority A: Essential (Error Prevention)
-    // 'plugin:vue/strongly-recommended', // Priority B: Strongly Recommended (Improving Readability)
-    // 'plugin:vue/recommended', // Priority C: Recommended (Minimizing Arbitrary Choices and Cognitive Overhead)
+    'plugin:vue/vue3-essential',
 
     'plugin:quasar/standard',
 
@@ -49,6 +47,10 @@ module.exports = {
     ga: true, // Google Analytics
     cordova: true,
     __statics: true,
+    __QUASAR_SSR__: true,
+    __QUASAR_SSR_SERVER__: true,
+    __QUASAR_SSR_CLIENT__: true,
+    __QUASAR_SSR_PWA__: true,
     process: true,
     Capacitor: true,
     chrome: true

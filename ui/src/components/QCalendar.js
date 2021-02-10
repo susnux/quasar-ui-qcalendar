@@ -1,3 +1,5 @@
+import { h } from 'vue'
+
 // Mixins
 import CalendarBase from '../mixins/calendar-base'
 
@@ -356,15 +358,22 @@ export default {
       }
     },
 
-    __renderComponent (h, component, data) {
+    __renderComponent (hh, component, data) {
       return h(component, data)
     }
   },
 
-  render (h) {
+  render () {
     const { start, end, maxDays, component } = this.__renderProps
 
     this.keyValue = getDayIdentifier(start)
+    const listeners = {}
+    for (const key in this.$attrs) {
+      if (Object.prototype.hasOwnProperty.call(this.$attrs, key) && key.startsWith('on')) {
+        const newKey = key.substr(2)[0].toLowerCase() + key.substr(3)
+        listeners[newKey] = this.$attrs[key]
+      }
+    }
 
     const data = {
       staticClass: (this.__isMiniMode === true ? 'q-calendar-mini' : ''),
@@ -380,21 +389,22 @@ export default {
         maxDays
       },
       on: {
-        ...this.$listeners,
+        ...listeners,
         'click:date2': ({ scope, event }) => {
-          if (this.$listeners.input !== undefined) {
+          if (this.$attrs.onInput !== undefined) {
             if (scope.timestamp.date !== undefined && this.emittedValue !== scope.timestamp.date) {
               this.emittedValue = scope.timestamp.date
             }
           }
           // Because we highjack this event for input, pass it on to parent
-          if (this.$listeners['click:date2']) {
+          if (this.$attrs['onClick:date2']) {
             /* eslint-disable-next-line */
             this.$emit('click:date2', { scope, event })
           }
         }
       },
-      scopedSlots: this.$scopedSlots
+      scopedSlots: this.$slots,
+      slots: this.$slots
     }
 
     return h('div', {

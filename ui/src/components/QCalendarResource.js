@@ -1,3 +1,5 @@
+import { h } from 'vue'
+
 // Quasar
 import { QIcon } from 'quasar'
 
@@ -71,10 +73,10 @@ export default {
       ])
     },
 
-    __renderHeadInterval (h, interval, index) {
+    __renderHeadInterval (hh, interval, index) {
       const width = convertToUnit(this.parsedIntervalWidth)
       const height = convertToUnit(this.parsedIntervalHeight)
-      const slot = this.$scopedSlots['interval-label']
+      const slot = this.$slots['interval-label']()
       const short = this.shortIntervalLabel
       const label = this.intervalFormatter(interval, short)
       const scope = {
@@ -84,35 +86,37 @@ export default {
       }
       let dragOver
 
-      return slot ? slot(scope) : h('div', {
-        staticClass: 'q-calendar-resource__head-label',
-        class: {
-          'q-calendar-resource__head-label--droppable': dragOver
-        },
-        style: {
-          maxWidth: width,
-          minWidth: width,
-          height
-        },
-        domProps: {
-          ondragover: (e) => {
-            if (this.dragOverFunc !== undefined) {
-              dragOver = this.dragOverFunc(e, interval, 'interval', index)
+      return slot
+        ? slot(scope)
+        : h('div', {
+          staticClass: 'q-calendar-resource__head-label',
+          class: {
+            'q-calendar-resource__head-label--droppable': dragOver
+          },
+          style: {
+            maxWidth: width,
+            minWidth: width,
+            height
+          },
+          domProps: {
+            ondragover: (e) => {
+              if (this.dragOverFunc !== undefined) {
+                dragOver = this.dragOverFunc(e, interval, 'interval', index)
+              }
+            },
+            ondrop: (e) => {
+              if (this.dropFunc !== undefined) {
+                this.dropFunc(e, interval, 'interval', index)
+              }
             }
           },
-          ondrop: (e) => {
-            if (this.dropFunc !== undefined) {
-              this.dropFunc(e, interval, 'interval', index)
-            }
-          }
-        },
-        on: this.getDefaultMouseEventHandlers(':interval2', (event, eventName) => {
-          return { scope: { timestamp: interval, index, label }, event }
-        })
-      }, label)
+          on: this.getDefaultMouseEventHandlers(':interval2', (event, eventName) => {
+            return { scope: { timestamp: interval, index, label }, event }
+          })
+        }, label)
     },
 
-    __renderBody (h) {
+    __renderBody (hh) {
       return h('div', {
         staticClass: 'q-calendar-resource__body'
       }, [
@@ -120,7 +124,7 @@ export default {
       ])
     },
 
-    __renderScrollArea (h) {
+    __renderScrollArea (hh) {
       return h('div', {
         ref: 'scrollArea',
         staticClass: 'q-calendar-resource__scroll-area'
@@ -129,7 +133,7 @@ export default {
       ])
     },
 
-    __renderHead (h) {
+    __renderHead (hh) {
       return h('div', {
         staticClass: 'q-calendar-resource__head' + (this.sticky === true ? ' q-calendar__sticky' : '')
       }, [
@@ -138,8 +142,8 @@ export default {
       ])
     },
 
-    __renderHeadResource (h) {
-      const slot = this.$scopedSlots['resource-header']
+    __renderHeadResource (hh) {
+      const slot = this.$slots['resource-header']()
       const width = convertToUnit(this.parsedResourceWidth)
       const height = convertToUnit(this.parsedIntervalHeight)
 
@@ -165,7 +169,7 @@ export default {
       ])
     },
 
-    __renderDayContainer (h) {
+    __renderDayContainer (hh) {
       const component = h('div', {
         staticClass: 'q-calendar-resource__day-container'
       }, [
@@ -188,7 +192,7 @@ export default {
       return component
     },
 
-    __renderBodyResources (h) {
+    __renderBodyResources (hh) {
       const data = {
         staticClass: 'q-calendar-resource__resources-body'
       }
@@ -196,7 +200,7 @@ export default {
       return h('div', data, this.__renderResources(h))
     },
 
-    __renderResources (h, resources = undefined, indentLevel = 0) {
+    __renderResources (hh, resources = undefined, indentLevel = 0) {
       if (resources === undefined) {
         resources = this.resources
       }
@@ -205,8 +209,8 @@ export default {
       })
     },
 
-    __renderResourceRow (h, resource, idx, indentLevel = 0) {
-      const slot = this.$scopedSlots['resource-row']
+    __renderResourceRow (hh, resource, idx, indentLevel = 0) {
+      const slot = this.$slots['resource-row']()
       const resourceRow = h('div', {
         staticClass: 'q-calendar-resource__resource-row'
       }, [
@@ -221,8 +225,8 @@ export default {
       return [resourceRow]
     },
 
-    __renderResourceLabel (h, resource, idx, indentLevel = 0) {
-      const slot = this.$scopedSlots['resource-label']
+    __renderResourceLabel (hh, resource, idx, indentLevel = 0) {
+      const slot = this.$slots['resource-label']()
       const scope = {
         resource: resource,
         index: idx
@@ -246,7 +250,7 @@ export default {
       ])
     },
 
-    __renderResourceText (h, resource, idx, indentLevel = 0) {
+    __renderResourceText (hh, resource, idx, indentLevel = 0) {
       const label = resource[this.resourceKey]
       if (label === undefined) {
         /* eslint-disable-next-line */
@@ -276,8 +280,8 @@ export default {
       ])
     },
 
-    __renderResourceIntervals (h, resource, idx) {
-      const slot = this.$scopedSlots['resource-intervals']
+    __renderResourceIntervals (hh, resource, idx) {
+      const slot = this.$slots['resource-intervals']()
       const timeStartPosX = this.timeStartPosX,
         timeDurationWidth = this.timeDurationWidth,
         intervals = this.intervals
@@ -290,9 +294,9 @@ export default {
     },
 
     // interval related to resource
-    __renderResourceInterval (h, resource, interval, idx) {
+    __renderResourceInterval (hh, resource, interval, idx) {
       // called for each interval
-      const slot = this.$scopedSlots['resource-interval']
+      const slot = this.$slots['resource-interval']()
       const slotData = { resource, interval }
       const width = convertToUnit(this.parsedIntervalWidth)
       const height = resource.height !== void 0 ? convertToUnit(resource.height) : convertToUnit(this.parsedResourceHeight)
@@ -331,12 +335,12 @@ export default {
       ])
     },
 
-    __renderResourcesError (h) {
+    __renderResourcesError (hh) {
       return h('div', {}, 'No resources have been defined')
     }
   },
 
-  render (h) {
+  render () {
     return h('div', {
       class: 'q-calendar-resource'
     }, [

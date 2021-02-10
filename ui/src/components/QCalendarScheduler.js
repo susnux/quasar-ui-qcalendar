@@ -1,3 +1,4 @@
+import { h } from 'vue'
 // Quasar
 import { QBtn, QIcon } from 'quasar'
 
@@ -95,7 +96,7 @@ export default {
       return y
     },
 
-    __renderHead (h) {
+    __renderHead (hh) {
       const component = h('div', {
         staticClass: 'q-calendar-scheduler__head' + (this.isSticky === true ? ' q-calendar__sticky' : ''),
         style: {
@@ -120,8 +121,8 @@ export default {
       return component
     },
 
-    __renderHeadResources (h) {
-      const slot = this.$scopedSlots['scheduler-resources-header']
+    __renderHeadResources (hh) {
+      const slot = this.$slots['scheduler-resources-header']()
       const width = convertToUnit(this.parsedResourceWidth)
 
       const scope = {
@@ -143,7 +144,7 @@ export default {
       ])
     },
 
-    __renderHeadDaysWrapper (h) {
+    __renderHeadDaysWrapper (hh) {
       return h('div', {
         staticClass: 'q-calendar-scheduler__head-days-body'
       }, [
@@ -151,7 +152,7 @@ export default {
       ])
     },
 
-    __renderHeadDays (h) {
+    __renderHeadDays (hh) {
       if (this.days.length === 1 && this.columnCount && parseInt(this.columnCount, 10) > 0) {
         return Array.apply(null, new Array(parseInt(this.columnCount, 10)))
           .map((_, i) => i + parseInt(this.columnIndexStart, 10))
@@ -162,9 +163,9 @@ export default {
       }
     },
 
-    __renderHeadDay (h, day, idx) {
-      const headDaySlot = this.$scopedSlots['head-day']
-      const dayHeaderSlot = this.$scopedSlots['scheduler-day-header']
+    __renderHeadDay (hh, day, idx) {
+      const headDaySlot = this.$slots['head-day']()
+      const dayHeaderSlot = this.$slots['scheduler-day-header']()
       const activeDate = this.noActiveDate !== true && this.value === day.date
       const scope = this.getScopeForSlot(day, idx)
       scope.activeDate = activeDate
@@ -208,7 +209,7 @@ export default {
       ])
     },
 
-    __renderHeadWeekday (h, day) {
+    __renderHeadWeekday (hh, day) {
       return h('div', {
         staticClass: 'ellipsis q-calendar-scheduler__head-weekday'
       }, [
@@ -216,17 +217,17 @@ export default {
       ])
     },
 
-    __renderHeadDayLabel (h, day, label) {
+    __renderHeadDayLabel (hh, day, label) {
       return h('span', {
         staticClass: 'ellipsis'
       }, this.weekdayFormatter(day, label))
     },
 
-    __renderHeadDayBtn (h, day, idx) {
+    __renderHeadDayBtn (hh, day, idx) {
       const activeDate = this.noActiveDate !== true && this.value === day.date
       const dayLabel = this.dayFormatter(day, false)
-      const dayLabelSlot = this.$scopedSlots['day-label']
-      const dayBtnSlot = this.$scopedSlots['day-btn']
+      const dayLabelSlot = this.$slots['day-label']()
+      const dayBtnSlot = this.$slots['day-btn']()
       const scope = { timestamp: day, index: idx, dayLabel, activeDate }
 
       return dayBtnSlot
@@ -249,8 +250,8 @@ export default {
         ])
     },
 
-    __renderColumnHeaderBefore (h, day, idx) {
-      const slot = this.$scopedSlots['scheduler-column-header-before']
+    __renderColumnHeaderBefore (hh, day, idx) {
+      const slot = this.$slots['scheduler-column-header-before']()
       const scope = { timestamp: day }
       scope.index = idx
       return h('div', {
@@ -260,8 +261,8 @@ export default {
       ])
     },
 
-    __renderColumnHeaderAfter (h, day, idx) {
-      const slot = this.$scopedSlots['scheduler-column-header-after']
+    __renderColumnHeaderAfter (hh, day, idx) {
+      const slot = this.$slots['scheduler-column-header-after']()
       const scope = { timestamp: day }
       scope.index = idx
       return h('div', {
@@ -271,7 +272,7 @@ export default {
       ])
     },
 
-    __renderBody (h) {
+    __renderBody (hh) {
       const component = h('div', {
         staticClass: 'q-calendar-scheduler__body'
       }, [
@@ -292,7 +293,7 @@ export default {
       return component
     },
 
-    __renderScrollArea (h) {
+    __renderScrollArea (hh) {
       if (this.noScroll !== undefined && this.noScroll === true) {
         return this.__renderPane(h)
       }
@@ -307,7 +308,7 @@ export default {
       }
     },
 
-    __renderPane (h) {
+    __renderPane (hh) {
       return h('div', {
         ref: 'pane',
         staticClass: 'q-calendar-scheduler__pane',
@@ -319,7 +320,7 @@ export default {
       ])
     },
 
-    __renderDayContainer (h) {
+    __renderDayContainer (hh) {
       return h('div', {
         staticClass: 'q-calendar-scheduler__day-container'
       }, [
@@ -332,7 +333,7 @@ export default {
       ])
     },
 
-    __renderResources (h, resources = undefined, indentLevel = 0) {
+    __renderResources (hh, resources = undefined, indentLevel = 0) {
       if (resources === undefined) {
         resources = this.resources
       }
@@ -341,7 +342,7 @@ export default {
       })
     },
 
-    __renderResourceRow (h, resource, idx, indentLevel = 0) {
+    __renderResourceRow (hh, resource, idx, indentLevel = 0) {
       const height = resource.height !== void 0 ? convertToUnit(resource.height) : convertToUnit(this.parsedResourceHeight)
       const style = { height: height }
       const resourceRow = h('div', {
@@ -358,11 +359,11 @@ export default {
       return [resourceRow]
     },
 
-    __renderResource (h, resource, idx, indentLevel = 0) {
+    __renderResource (hh, resource, idx, indentLevel = 0) {
       return this.__renderResourceLabel(h, resource, idx, indentLevel)
     },
 
-    __renderBodyResources (h, resource, idx, indentLevel = 0) {
+    __renderBodyResources (hh, resource, idx, indentLevel = 0) {
       const width = convertToUnit(this.parsedResourceWidth)
 
       const data = {
@@ -378,7 +379,7 @@ export default {
         ])
     },
 
-    __renderDays (h, resource, idx) {
+    __renderDays (hh, resource, idx) {
       if (this.days.length === 1 && this.columnCount && parseInt(this.columnCount, 10) > 0) {
         return Array.apply(null, new Array(parseInt(this.columnCount, 10)))
           .map((_, i) => i + parseInt(this.columnIndexStart, 10))
@@ -389,7 +390,7 @@ export default {
       }
     },
 
-    __renderDay (h, resource, day, idx, resourceIndex) {
+    __renderDay (hh, resource, day, idx, resourceIndex) {
       const width = this.isSticky === true ? this.cellWidth : 100 / this.days.length + '%'
       const key = day.date + (resourceIndex !== undefined ? ':' + resourceIndex : '') + (idx !== undefined ? ':' + idx : '')
 
@@ -406,9 +407,9 @@ export default {
       ])
     },
 
-    __renderDayResource (h, resource, day, idx, resourceIndex) {
+    __renderDayResource (hh, resource, day, idx, resourceIndex) {
       const styler = this.resourceStyle || this.resourceStyleDefault
-      const slot = this.$scopedSlots['scheduler-resource-day']
+      const slot = this.$slots['scheduler-resource-day']()
       const scope = this.getScopeForSlot(day, idx, resource)
       const key = day.date + (resourceIndex !== undefined ? ':' + resourceIndex : '') + (idx !== undefined ? ':' + idx : '')
       let dragOver
@@ -445,8 +446,8 @@ export default {
       return h('div', data, children)
     },
 
-    __renderResourceLabel (h, resource, idx, indentLevel = 0) {
-      const slot = this.$scopedSlots['scheduler-resource']
+    __renderResourceLabel (hh, resource, idx, indentLevel = 0) {
+      const slot = this.$slots['scheduler-resource']()
       const scope = {
         resource: resource,
         index: idx,
@@ -495,12 +496,12 @@ export default {
       ])
     },
 
-    __renderResourcesError (h) {
+    __renderResourcesError (hh) {
       return h('div', {}, 'No resources have been defined')
     }
   },
 
-  render (h) {
+  render () {
     return h('div', {
       class: 'q-calendar-scheduler',
       directives: [{

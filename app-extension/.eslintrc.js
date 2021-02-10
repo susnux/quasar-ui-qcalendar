@@ -11,10 +11,8 @@ module.exports = {
   },
 
   extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    'plugin:vue/essential',
-    '@vue/standard'
+    'eslint:recommended',
+    'plugin:vue/vue3-essential'
   ],
 
   // required to lint *.vue files
@@ -23,10 +21,16 @@ module.exports = {
   ],
 
   globals: {
-    'ga': true, // Google Analytics
-    'cordova': true,
-    '__statics': true,
-    'process': true
+    ga: true, // Google Analytics
+    cordova: true,
+    __statics: true,
+    __QUASAR_SSR__: true,
+    __QUASAR_SSR_SERVER__: true,
+    __QUASAR_SSR_CLIENT__: true,
+    __QUASAR_SSR_PWA__: true,
+    process: true,
+    Capacitor: true,
+    chrome: true
   },
 
   // add your custom rules here

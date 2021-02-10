@@ -1,3 +1,4 @@
+import { h } from 'vue'
 // Quasar
 import { QBtn } from 'quasar'
 
@@ -141,7 +142,7 @@ export default {
     __adjustForWeekEvents () {
       if (this.isMiniMode === true) return
       if (this.dayHeight !== 0) return
-      const slotWeek = this.$scopedSlots.week
+      const slotWeek = this.$slots.week()
       if (slotWeek === void 0) return
 
       let i = 0
@@ -159,7 +160,7 @@ export default {
       }
     },
 
-    __renderContainer (h) {
+    __renderContainer (hh) {
       const component = h('div', {
         staticClass: 'q-calendar-weekly__container'
       }, [
@@ -181,7 +182,7 @@ export default {
       return component
     },
 
-    __renderHead (h) {
+    __renderHead (hh) {
       return h('div', {
         staticClass: 'q-calendar-weekly__head'
       }, [
@@ -194,8 +195,8 @@ export default {
       ])
     },
 
-    __renderWorkWeekHead (h) {
-      const slot = this.$scopedSlots['workweek-header']
+    __renderWorkWeekHead (hh) {
+      const slot = this.$slots['workweek-header']()
       const scope = {
         start: this.parsedStart,
         end: this.parsedEnd,
@@ -210,7 +211,7 @@ export default {
       }, (slot ? slot({ scope }) : '#'))
     },
 
-    __renderHeadDays (h) {
+    __renderHeadDays (hh) {
       return h('div', {
         staticClass: 'q-calendar-weekly__head-weekdays',
         style: {
@@ -225,9 +226,9 @@ export default {
       ])
     },
 
-    __renderHeadDay (h, day, index) {
+    __renderHeadDay (hh, day, index) {
       const width = this.cellWidth + '%'
-      const headDaySlot = this.$scopedSlots['head-day']
+      const headDaySlot = this.$slots['head-day']()
       const disabled = (this.disabledWeekdays ? this.disabledWeekdays.includes(day.weekday) : false)
       const days = this.days.filter(day2 => day2.weekday === day.weekday)
       const scope = { timestamp: day, days, index, miniMode: this.isMiniMode }
@@ -248,14 +249,14 @@ export default {
       ])
     },
 
-    __renderHeadDayLabel (h, day, shortWeekdayLabel) {
+    __renderHeadDayLabel (hh, day, shortWeekdayLabel) {
       const weekdayLabel = this.weekdayFormatter(day, shortWeekdayLabel)
       return h('span', {
         staticClass: 'ellipsis'
       }, this.isMiniMode === true && this.shortWeekdayLabel === true ? weekdayLabel.charAt(0) : weekdayLabel)
     },
 
-    __renderWeeks (h) {
+    __renderWeeks (hh) {
       const days = this.days
       const weekDays = this.weekdays.length
       const weeks = []
@@ -266,8 +267,8 @@ export default {
       return weeks
     },
 
-    __renderWeek (h, week, weekNum) {
-      const slotWeek = this.$scopedSlots.week
+    __renderWeek (hh, week, weekNum) {
+      const slotWeek = this.$slots.week()
       const weekdays = this.weekdays
       const slotData = { week, weekdays, miniMode: this.isMiniMode }
       const style = {}
@@ -297,16 +298,16 @@ export default {
           }, week.map(day => this.__renderDay(h, day))),
           this.isMiniMode !== true && slotWeek !== undefined
             ? h('div', {
-                ref: 'weekEvent' + weekNum,
-                staticClass: 'q-calendar-weekly__week-events'
-              }, slotWeek(slotData))
+              ref: 'weekEvent' + weekNum,
+              staticClass: 'q-calendar-weekly__week-events'
+            }, slotWeek(slotData))
             : ''
         ])
       ])
     },
 
-    __renderWorkWeekGutter (h, week) {
-      const slot = this.$scopedSlots.workweek
+    __renderWorkWeekGutter (hh, week) {
+      const slot = this.$slots.workweek()
       // adjust day to account for Sunday/Monday start of week calendars
       const day = week.length > 2 ? week[2] : week[0]
       const { timestamp } = this.isCurrentWeek(week)
@@ -323,11 +324,11 @@ export default {
       }, slot ? slot(scope) : workweekLabel)
     },
 
-    __renderDay (h, day) {
+    __renderDay (hh, day) {
       const styler = this.dayStyle || this.dayStyleDefault
       const outside = this.isOutside(day)
       const activeDate = this.noActiveDate !== true && this.value === day.date
-      const slot = this.$scopedSlots.day
+      const slot = this.$slots.day()
       const scope = { outside, timestamp: day, miniMode: this.isMiniMode, activeDate }
       const hasMonth = (outside === false && this.days.find(d => d.month === day.month).day === day.day && this.showMonthLabel === true)
 
@@ -371,7 +372,7 @@ export default {
       ])
     },
 
-    __renderDayLabel (h, day) {
+    __renderDayLabel (hh, day) {
       const outside = this.isOutside(day)
 
       // return if outside days are hidden
@@ -380,8 +381,8 @@ export default {
       }
 
       const dayLabel = this.dayFormatter(day, false)
-      const dayLabelSlot = this.$scopedSlots['day-label']
-      const dayBtnSlot = this.$scopedSlots['day-btn']
+      const dayLabelSlot = this.$slots['day-label']()
+      const dayBtnSlot = this.$slots['day-btn']()
 
       const selectedDate = (
         // this.isMiniMode &&
@@ -417,7 +418,7 @@ export default {
         ])
     },
 
-    __renderDayOfYearLabel (h, day) {
+    __renderDayOfYearLabel (hh, day) {
       const outside = this.isOutside(day)
 
       // return if outside days are hidden
@@ -425,7 +426,7 @@ export default {
         return
       }
 
-      const slot = this.$scopedSlots['day-of-year']
+      const slot = this.$slots['day-of-year']()
       const slotData = { timestamp: day }
 
       return h('div', {
@@ -433,7 +434,7 @@ export default {
       }, slot ? slot(slotData) : day.doy)
     },
 
-    __renderDayMonth (h, day) {
+    __renderDayMonth (hh, day) {
       const outside = this.isOutside(day)
 
       // return if outside days are hidden
@@ -441,7 +442,7 @@ export default {
         return
       }
 
-      const slot = this.$scopedSlots['month-label']
+      const slot = this.$slots['month-label']()
       const monthLabel = this.monthFormatter(day, this.shortMonthLabel)
       const slotData = { monthLabel, timestamp: day, miniMode: this.isMiniMode }
 
@@ -453,7 +454,7 @@ export default {
     }
   },
 
-  render (h) {
+  render () {
     return h('div', {
       class: this.staticClass,
       on: {
